@@ -51,7 +51,7 @@ javaCommand="java"                                         # name of the Java la
 javaExe="$JAVA_HOME/bin/$javaCommand"                      # file name of the Java application launcher executable
 
 FINAL_RETURN_VALUE=-1
-for i in `seq 1 ${NUMBER_OF_CHICAGO_SERVICE_INSTANCES}`
+for i in `seq 1 "${NUMBER_OF_CHICAGO_SERVICE_INSTANCES}"`
 do
 	export SERVICE_NAME="chicago_$CHICAGO_REST_PORT";
 	
@@ -65,11 +65,11 @@ do
 
 	jarsCommon="${APP_HOME}/lib/*:${APP_CONNECTORS_DIR}/*: ${CHICAGO_MAIN_CLASS_NAME} "	
 	javaCommandLine="$javaExe $javaArgs $jarsCommon"       # command line to start the Java service application
-	echo $javaCommandLine;
+	echo "$javaCommandLine";
 
-	RETURN_VALUE=$( main $1 );
-	RETURN_VALUE=`echo $?`
-	if [ $RETURN_VALUE -ne 0 ]; then
+	RETURN_VALUE=$( main "$1" );
+	RETURN_VALUE=$(echo $?)
+	if [ "$RETURN_VALUE" -ne 0 ]; then
 	   echo "ERROR: Service $SERVICE_NAME returned code $RETURN_VALUE during $1 operation.";
 	else
 	   FINAL_RETURN_VALUE=0

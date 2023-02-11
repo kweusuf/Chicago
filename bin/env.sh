@@ -15,20 +15,20 @@
 if [ -z "$APP_INSTALLATION_DIR" ]; then
 	PRG="$0"
 	while [ -h "$PRG" ]; do
-		ls=`ls -ld "$PRG"`
-		link=`expr "$ls" : '.*-> \(.*\)$'`
+		ls=$(ls -ld "$PRG")
+		link=$(expr "$ls" : '.*-> \(.*\)$')
 		# Resolve links - $0 may be a soft-link
 		if expr "$link" : '.*/.*' > /dev/null; then
 			PRG="$link"
 		else
-			PRG=`dirname "$PRG"`/"$link"
+			PRG=$(dirname "$PRG")/"$link"
 		fi
 	done
-	PRGDIR=`dirname "$PRG"`
+	PRGDIR=$(dirname "$PRG")
 
 	# Setting APP_INSTALLATION_DIR and APP_HOME variables
-	APP_INSTALLATION_DIR=`cd "$PRGDIR/.." ; pwd`
-	APP_HOME=`cd "$PRGDIR/.." ; pwd`
+	APP_INSTALLATION_DIR=$(cd "$PRGDIR/.." || exit ; pwd)
+	APP_HOME=$(cd "$PRGDIR/.." || exit ; pwd)
 fi
 
 # Set the value of installation directory for Java

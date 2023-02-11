@@ -27,7 +27,7 @@ exit_as_error() {
     EXIT_STATUS=$1;
     echo "${MESSAGE_RESOLVE_ISSUE}";
     echo "${MESSAGE_EXIT_SCRIPT} ${EXIT_STATUS}";
-    exit ${EXIT_STATUS};
+    exit "${EXIT_STATUS}";
 }
 
 #--------------------------------------------------------------------------------------------
@@ -37,20 +37,20 @@ exit_as_error() {
 echo "Identifying Chicago installation directory";
 PRG="$0"
 while [ -h "$PRG" ]; do
-  ls=`ls -ld "$PRG"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
+  ls=$(ls -ld "$PRG")
+  link=$(expr "$ls" : '.*-> \(.*\)$')
   # Resolve links - $0 may be a soft-link
   if expr "$link" : '.*/.*' > /dev/null; then
     PRG="$link"
   else
-    PRG=`dirname "$PRG"`/"$link"
+    PRG=$(dirname "$PRG")/"$link"
   fi
 done
-PRGDIR=`dirname "$PRG"`
+PRGDIR=$(dirname "$PRG")
 
 # Setting APP_INSTALLATION_DIR and APP_HOME variables
-APP_INSTALLATION_DIR=`cd "$PRGDIR/.." ; pwd`
-APP_HOME=`cd "$PRGDIR/.." ; pwd`
+APP_INSTALLATION_DIR=$(cd "$PRGDIR/.." || exit ; pwd)
+APP_HOME=$(cd "$PRGDIR/.." || exit ; pwd)
 
 # Validate if the configure.sh file exists using the APP_HOME value
 if [ ! -r "${APP_HOME}/bin/configure.sh" ]; then
@@ -60,7 +60,7 @@ if [ ! -r "${APP_HOME}/bin/configure.sh" ]; then
 fi
 
 # Include Chicago environment variables defined in scripts - 
-. ${APP_HOME}/bin/env.sh
+. "${APP_HOME}"/bin/env.sh
 
 
 #--------------------------------------------------------------------------------------------
@@ -80,8 +80,8 @@ if ! ${APP_PERMISSIONS_CMD}; then
 	exit_as_error 2;
 fi
 
-mkdir -p ${APP_RUN}
-mkdir -p ${APP_LOG}
+mkdir -p "${APP_RUN}"
+mkdir -p "${APP_LOG}"
 
 #--------------------------------------------------------------------------------------------
 # Step 3 : Exit script with success
