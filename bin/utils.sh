@@ -18,8 +18,7 @@ function checkProcessIsRunning {
 function checkProcessIsOurService {
    local pid="$1"
    if [ "$(ps -p "$pid" --no-headers -o comm)" != "$javaCommand" ]; then return 1; fi
-   grep -q --binary -F "$javaCommandLineKeyword" /proc/"$pid"/cmdline
-   if [ $? -ne 0 ]; then return 1; fi
+   if ! grep -q --binary -F "$javaCommandLineKeyword" /proc/"$pid"/cmdline; then return 1; fi
    return 0; }
 
 # Returns 0 when the service is running and sets the variable $pid to the PID.
@@ -49,8 +48,7 @@ function startServiceProcess {
 function stopServiceProcess {
    kill "$pid" || return 1
    for ((i=0; i<maxShutdownTime*10; i++)); do
-      checkProcessIsRunning "$pid"
-      if [ $? -ne 0 ]; then
+      if ! checkProcessIsRunning "$pid"; then
          rm -f "$pidFile"
          return 0
          fi

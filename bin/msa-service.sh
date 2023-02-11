@@ -18,29 +18,29 @@ exit_as_error() {
     EXIT_STATUS=$1;
     echo "${MESSAGE_RESOLVE_ISSUE}";
     echo "${MESSAGE_EXIT_SCRIPT} ${EXIT_STATUS}";
-    exit ${EXIT_STATUS};
+    exit "${EXIT_STATUS}";
 }
 
 # Identify Microservice installation directory
 echo "Identifying Microservice installation directory";
 PRG="$0"
 while [ -h "$PRG" ]; do
-  ls=`ls -ld "$PRG"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
+  ls=$(ls -ld "$PRG")
+  link=$(expr "$ls" : '.*-> \(.*\)$')
   # Resolve links - $0 may be a soft-link
   if expr "$link" : '.*/.*' > /dev/null; then
     PRG="$link"
   else
-    PRG=`dirname "$PRG"`/"$link"
+    PRG=$(dirname "$PRG")/"$link"
   fi
 done
-PRGDIR=`dirname "$PRG"`
+PRGDIR=$(dirname "$PRG")
 
 # Setting APP_HOME variable
-APP_HOME=`cd "$PRGDIR/.." ; pwd`
+APP_HOME=$(cd "$PRGDIR/.." || exit ; pwd)
 
-. ${APP_HOME}/bin/env.sh
-. ${APP_HOME}/bin/utils.sh
+. "${APP_HOME}"/bin/env.sh
+. "${APP_HOME}"/bin/utils.sh
 
 #----------------------------------------------------------------------------------------------
 # Step 1: Manage service
@@ -51,7 +51,7 @@ javaCommand="java"                                         # name of the Java la
 javaExe="$JAVA_HOME/bin/$javaCommand"                      # file name of the Java application launcher executable
 
 FINAL_RETURN_VALUE=-1
-for i in `seq 1 "${NUMBER_OF_CHICAGO_SERVICE_INSTANCES}"`
+for i in $(seq 1 "${NUMBER_OF_CHICAGO_SERVICE_INSTANCES}")
 do
 	export SERVICE_NAME="chicago_$CHICAGO_REST_PORT";
 	
@@ -68,7 +68,7 @@ do
 	echo "$javaCommandLine";
 
 	RETURN_VALUE=$( main "$1" );
-	RETURN_VALUE=$(echo $?)
+	RETURN_VALUE=$($?)
 	if [ "$RETURN_VALUE" -ne 0 ]; then
 	   echo "ERROR: Service $SERVICE_NAME returned code $RETURN_VALUE during $1 operation.";
 	else
@@ -76,7 +76,7 @@ do
 	   echo "SUCCESS: Service ${SERVICE_NAME} $1 successfully.";
 	fi
 	
-	CHICAGO_REST_PORT="$(( ${CHICAGO_REST_PORT} + 1 ))";
+	CHICAGO_REST_PORT="$(( CHICAGO_REST_PORT + 1 ))";
 done
 
 exit $FINAL_RETURN_VALUE;
